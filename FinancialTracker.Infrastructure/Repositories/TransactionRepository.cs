@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using FinancialTracker.Domain.Entites;
 using FinancialTracker.Infrastructure.Utilities;
 using Microsoft.Data.SqlClient;
+using System.ComponentModel.DataAnnotations;
 
 namespace FinancialTracker.Infrastructure.Repositories
 {
@@ -24,6 +25,9 @@ namespace FinancialTracker.Infrastructure.Repositories
         {
             try
             {
+                if (transaction.Amount <= 0)
+                    throw new ValidationException("Transaction amount must be greater than 0.");
+
                 await _context.Transactions.AddAsync(transaction);
                 await _context.SaveChangesAsync(); // Or leave this for the caller to handle
             }
@@ -91,9 +95,13 @@ namespace FinancialTracker.Infrastructure.Repositories
         }
  
 
-        public Task<Transactions> GetTransactionByIdAsync(int TransactionID)
+        public async Task<Transactions> GetTransactionByIdAsync(int TransactionID)
         {
-            throw new NotImplementedException();
+            if ( string.IsNullOrEmpty(TransactionID.ToString()))
+                throw new ValidationException("TransactionID does not exist");
+
+            var Result = await _context.Transactions.FindAsync(TransactionID);
+            return Result;
         }
 
         public async Task<TransactionsEntity> GetTransactionInfoByIdAsync(int transactionId, int userId)

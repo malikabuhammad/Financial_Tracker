@@ -12,19 +12,19 @@ namespace FinancialTracker.Infrastructure
     {
 
         public DbSet<Users> Users { get; set; }
-        public DbSet<Bill> Bill { get; set; }
+        public DbSet<Bill> Bills { get; set; }
         public DbSet<Bill_Status> Bill_Status { get; set; }
-        public DbSet<Budget> Budget { get; set; }
+        public DbSet<Budget> Budgets { get; set; }
         public DbSet<Category> Category { get; set; }
-        public DbSet<CategoryType> CategoryType { get; set; }
+        public DbSet<CategoryType> CategoryTypes { get; set; }
         public DbSet<Currency> Currency { get; set; }
-        public DbSet<Goal> Goal { get; set; }
-        public DbSet<Notification> Notification { get; set; }
-        public DbSet<RecurringTransaction> RecurringTransaction { get; set; }
-        public DbSet<Report> Report { get; set; }
-        public DbSet<Transaction> Transaction { get; set; }
+        public DbSet<Goal> Goals { get; set; }
+        public DbSet<Notification> Notifications { get; set; }
+        public DbSet<RecurringTransaction> RecurringTransactions { get; set; }
+        public DbSet<Report> Reports { get; set; }
+        public DbSet<Transactions> Transactions { get; set; }
         public DbSet<TransactionTag> TransactionTag { get; set; }
-        public DbSet<AuditLog> AuditLog { get; set; }
+        public DbSet<AuditLog> AuditLogs { get; set; }
         public DbSet<Bill_Status> bill_Statuses { get; set; }
 
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace FinancialTracker.Domain.Entites;
 
-public  class Transaction
+public  class Transactions
 {
     public int TransactionId { get; set; }
 

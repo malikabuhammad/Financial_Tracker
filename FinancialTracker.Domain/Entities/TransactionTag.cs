@@ -17,5 +17,5 @@ public partial class TransactionTag
 
     public virtual Tag Tag { get; set; }
 
-    public virtual Transaction Transaction { get; set; }
+    public virtual Transactions Transaction { get; set; }
 }

@@ -1,0 +1,104 @@
+﻿{
+   "CodeGenerationMode": 4,
+   "ContextClassName": "FinanceTrackerContext",
+   "ContextNamespace": null,
+   "FilterSchemas": false,
+   "IncludeConnectionString": false,
+   "ModelNamespace": null,
+   "OutputContextPath": null,
+   "OutputPath": "Entites",
+   "PreserveCasingWithRegex": true,
+   "ProjectRootNamespace": "FinancialTracker.Domain",
+   "Schemas": null,
+   "SelectedHandlebarsLanguage": 2,
+   "SelectedToBeGenerated": 2,
+   "T4TemplatePath": null,
+   "Tables": [
+      {
+         "Name": "[dbo].[AuditLogs]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Bill_Status]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Bills]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Budgets]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Categories]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[CategoryTypes]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Currencies]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Goals]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Notifications]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[RecurringTransactions]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Reports]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Tags]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Transactions]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[TransactionTags]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Users]",
+         "ObjectType": 0
+      }
+   ],
+   "UiHint": null,
+   "UncountableWords": null,
+   "UseAsyncStoredProcedureCalls": true,
+   "UseBoolPropertiesWithoutDefaultSql": false,
+   "UseDatabaseNames": true,
+   "UseDatabaseNamesForRoutines": true,
+   "UseDateOnlyTimeOnly": true,
+   "UseDbContextSplitting": false,
+   "UseDecimalDataAnnotationForSprocResult": true,
+   "UseFluentApiOnly": true,
+   "UseHandleBars": false,
+   "UseHierarchyId": false,
+   "UseInflector": true,
+   "UseLegacyPluralizer": false,
+   "UseManyToManyEntity": false,
+   "UseNoDefaultConstructor": false,
+   "UseNoNavigations": false,
+   "UseNoObjectFilter": false,
+   "UseNodaTime": false,
+   "UseNullableReferences": false,
+   "UsePrefixNavigationNaming": false,
+   "UseSchemaFolders": false,
+   "UseSchemaNamespaces": false,
+   "UseSpatial": false,
+   "UseT4": false,
+   "UseT4Split": false
+}

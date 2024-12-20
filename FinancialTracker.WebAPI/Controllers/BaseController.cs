@@ -18,7 +18,7 @@ namespace FinancialTracker.WebAPI.Controllers
                 throw new UnauthorizedAccessException("User is not authenticated.");
             }
 
-            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value; // Use "sub" or appropriate claim
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;  
             if (string.IsNullOrEmpty(userIdClaim))
             {
                 throw new UnauthorizedAccessException("User ID is missing in the token.");

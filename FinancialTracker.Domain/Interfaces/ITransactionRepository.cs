@@ -8,6 +8,7 @@ using System.Threading.Tasks;
  
 namespace FinancialTracker.Domain.Interfaces
 {
+    //فكرة عامة 
     public interface ITransactionRepository
     {
         Task<List<TransactionsEntity>> GetAllTransactionsAsync(int UserID );
@@ -15,6 +16,7 @@ namespace FinancialTracker.Domain.Interfaces
         Task<TransactionsEntity> GetTransactionInfoByIdAsync(int TransactionID, int UserID);
         Task AddTransactionAsync(Transactions transaction);
         Task EditTransactionAsync(Transactions transaction);
-        Task SaveChangesAsync();
+       
+         Task SaveChangesAsync();
     }
 }

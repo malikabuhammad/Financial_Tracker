@@ -1,4 +1,5 @@
 ﻿using FinancialTracker.Domain.Entites;
+using FinancialTracker.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -26,6 +27,8 @@ namespace FinancialTracker.Infrastructure
         public DbSet<TransactionTag> TransactionTag { get; set; }
         public DbSet<AuditLog> AuditLogs { get; set; }
         public DbSet<Bill_Status> bill_Statuses { get; set; }
+        public DbSet<Roles> Roles { get; set; }
+        public DbSet<UserRoles> UserRoles { get; set; }
 
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {

@@ -15,15 +15,19 @@ namespace FinancialTracker.Application.Services
             _configuration = configuration;
         }
 
-        public string GenerateToken(int userId, string username, string role)
+        public string GenerateToken(int userId, string username, List<string> roles)
         {
-            var claims = new[]
+            var claims = new List<Claim>
+    {
+        new Claim(JwtRegisteredClaimNames.Sub, userId.ToString()),
+        new Claim(ClaimTypes.Name, username),                   
+    };
+
+            // Add roles as claims
+            foreach (var role in roles)
             {
-                new Claim(JwtRegisteredClaimNames.Sub, userId.ToString()), 
-                new Claim(ClaimTypes.Name, username),                     
-                new Claim(ClaimTypes.Role, role),                         
-                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())  
-            };
+                claims.Add(new Claim(ClaimTypes.Role, role));
+            }
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
             var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
@@ -32,10 +36,11 @@ namespace FinancialTracker.Application.Services
                 issuer: _configuration["Jwt:Issuer"],
                 audience: _configuration["Jwt:Audience"],
                 claims: claims,
-                expires: DateTime.UtcNow.AddHours(3), 
+                expires: DateTime.UtcNow.AddHours(2), // Token expires in 2 hours
                 signingCredentials: credentials);
 
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
+
     }
 }

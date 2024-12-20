@@ -30,10 +30,6 @@ A modern personal finance tracker built with **.NET 8 APIs** and a dynamic front
 - Manage bills, subscriptions, and recurring expenses with reminders.
 - Auto-detect recurring transactions for convenience.
 
-### Integration with Banks
-- Sync transactions securely with APIs like Plaid or Yodlee.
-- Enable automatic categorization and reconciliation.
-
 ### Reports and Exports
 - Generate detailed financial reports (monthly/annual) in PDF or Excel formats.
 - Export data for tax preparation or sharing.

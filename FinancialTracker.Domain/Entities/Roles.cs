@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FinancialTracker.Domain.Entites;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -12,5 +13,8 @@ namespace FinancialTracker.Domain.Entities
         [Key]
         public int RoleId { get; set; }
         public string RoleName { get; set; }
+
+        public virtual ICollection<Users> Users { get; set; } = new List<Users>();
+
     }
 }

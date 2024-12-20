@@ -15,8 +15,13 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("MyConnection")));
 builder.Services.AddScoped<ITransactionRepository, TransactionRepository>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+
 builder.Services.AddScoped<TransactionsService>();
+builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<ProceduresHelper>();
+builder.Services.AddSingleton<JwtTokenService>();
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddControllers();
 
@@ -25,6 +30,7 @@ builder.Services.AddSwaggerGen();
 
 // Add JWT Authentication
 builder.Services.AddJwtAuthentication(builder.Configuration);
+builder.Services.AddSwaggerDocumentation();
 
 // Add Authorization
 builder.Services.AddAuthorization();
@@ -42,24 +48,24 @@ if (app.Environment.IsDevelopment())
     });
 }
 
-// General middleware
-
-
-app.UseAuthentication();
-app.UseAuthorization();
-//Custom middleware
+// Custom middleware 
 app.UseMiddleware<ExceptionHandlingMiddleware>();
+
+ 
 app.MapGet("/", context =>
 {
     context.Response.Redirect("/swagger");
     return Task.CompletedTask;
 });
-
+ 
 app.UseHttpsRedirection();
 
+ 
+app.UseAuthentication();
 app.UseAuthorization();
-
+ 
 app.MapControllers();
+
 
 
 app.Run();

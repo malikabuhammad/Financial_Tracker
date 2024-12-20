@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace FinancialTracker.Domain.Entites;
 
 public  class Transactions
 {
+    [Key]
     public int TransactionId { get; set; }
 
     public int UserId { get; set; }

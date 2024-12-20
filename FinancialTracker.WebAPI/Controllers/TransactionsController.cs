@@ -1,9 +1,11 @@
 ﻿using FinancialTracker.Application.Services;
 using FinancialTracker.Domain.Entites;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FinancialTracker.WebAPI.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     public class TransactionsController : BaseController 
     {

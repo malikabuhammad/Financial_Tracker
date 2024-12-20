@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FinancialTracker.Domain.Entities;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
@@ -20,6 +21,8 @@ public partial class Users
     public DateTime? UpdatedAt { get; set; }
 
     public DateTime? UpdatedBy { get; set; }
+    //public List<string> Roles { get; set; } = new List<string>();
 
     public virtual ICollection<Category> Categories { get; set; } = new List<Category>();
+    public virtual ICollection<Roles> Roles { get; set; } = new List<Roles>();
 }

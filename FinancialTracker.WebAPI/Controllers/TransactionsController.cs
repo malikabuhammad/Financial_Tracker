@@ -1,7 +1,11 @@
-﻿using FinancialTracker.Application.Services;
+﻿using FinancialTracker.Application.DTOs;
+using FinancialTracker.Application.Services;
 using FinancialTracker.Domain.Entites;
+using FinancialTracker.Infrastructure.Utilities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Transactions;
+using static FinancialTracker.Application.DTOs.TransactionsDTOs;
 
 namespace FinancialTracker.WebAPI.Controllers
 {
@@ -23,7 +27,22 @@ namespace FinancialTracker.WebAPI.Controllers
             {
                  int userId = GetUserId();
 
-                 var result = await _transactionService.GetAllTransactionsAsync(userId);
+                 var TransData = await _transactionService.GetAllTransactionsAsync(userId);
+                var result = TransData
+                    .Select(r => new { 
+                        EncryptID= EncryptionHelper.EncryptId( r.TransactionId),
+                        r.TypeName,
+                        r.Username,
+                        r.Date,
+                        r.CreateDate,
+                        r.Notes,
+                        r.CategoryName,
+                        r.CategoryId,
+                        r.Amount,
+                        r.IsRecurring,
+
+                
+                    });
                 return Ok(result);
             }
             catch (UnauthorizedAccessException ex)
@@ -40,18 +59,18 @@ namespace FinancialTracker.WebAPI.Controllers
             }
         }
 
-        [HttpGet("Get_Transaction_Details/{TransactionId}")]
-        public async Task<IActionResult> GetTransactionById(int TransactionId)
+        [HttpGet("Get_Transaction_Details/{EncryptedID}")]
+        public async Task<IActionResult> GetTransactionById(string EncryptedID)
         {
             try
             {
-                int userId = GetUserId(); 
+                int userId = GetUserId();
 
-               
-                var transaction = await _transactionService.GetTransactionByIdAsync(TransactionId);
+                int TransactionID = EncryptionHelper.DecryptId(EncryptedID);
+                var transaction = await _transactionService.GetTransactionByIdAsync(TransactionID);
                 if (transaction == null)
                 {
-                    return NotFound(new { Message = $"Transaction with ID {TransactionId} was not found." });
+                    return NotFound(new { Message = $"Transaction with ID {TransactionID} was not found." });
                 }
 
                 return Ok(transaction);
@@ -71,15 +90,26 @@ namespace FinancialTracker.WebAPI.Controllers
         }
 
         [HttpPost("Add_Transaction")]
-        public async Task<IActionResult> AddTransaction([FromBody] Transactions transaction)
+        public async Task<IActionResult> AddTransaction([FromBody] TransactionAddModel transaction)
         {
             try
             {
                 int userId = GetUserId();
-                transaction.UserId = userId;  
 
-                await _transactionService.AddTransactionAsync(transaction);
-                return CreatedAtAction(nameof(GetTransactionById), new { transactionId = transaction.TransactionId }, transaction);
+                Transactions transactionObj = new Transactions()
+                {Amount= transaction.Amount,
+                CategoryId= transaction.CategoryId,
+                CreateDate=DateTime.Now,
+                Date=transaction.Date,
+                IsRecurring=transaction.IsRecurring,
+                Notes=transaction.Notes,
+
+                 
+                 UserId=userId,
+                };
+
+                await _transactionService.AddTransactionAsync(transactionObj);
+                return Ok(200);
             }
             catch (UnauthorizedAccessException ex)
             {
@@ -96,13 +126,22 @@ namespace FinancialTracker.WebAPI.Controllers
         }
 
         [HttpPut("Update_Transaction")]
-        public async Task<IActionResult> EditTransaction([FromBody] Transactions transaction)
+        public async Task<IActionResult> EditTransaction([FromBody] TransactionEditModel transaction)
         {
             try
             {
-                int userId = GetUserId();  
+              var TransObj =  await _transactionService.GetTransactionByIdAsync(transaction.TransactionId);
+ 
 
-                await _transactionService.EditTransactionAsync(transaction);
+                TransObj.CategoryId = transaction.CategoryId;
+                TransObj.Amount = transaction.Amount;
+                TransObj.Date = transaction.Date;
+                TransObj.Notes = transaction.Notes;
+                TransObj.IsRecurring = transaction.IsRecurring;
+                TransObj.TransactionId = transaction.TransactionId;
+    
+               
+                 await _transactionService.EditTransactionAsync(TransObj);
                 return NoContent();
             }
             catch (UnauthorizedAccessException ex)

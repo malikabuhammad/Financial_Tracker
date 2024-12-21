@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace FinancialTracker.Domain.Entites;
 
-public partial class Category
+public partial class Categories
 {
     [Key]
     public int CategoryId { get; set; }

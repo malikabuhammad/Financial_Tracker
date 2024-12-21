@@ -1,12 +1,6 @@
 ﻿using FinancialTracker.Domain.Entites;
 using FinancialTracker.Domain.Interfaces;
 using FinancialTracker.Domain.ProceduresEntities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Transactions;
 
 namespace FinancialTracker.Application.Services
 {
@@ -24,7 +18,7 @@ namespace FinancialTracker.Application.Services
             return await _transactionRepository.GetAllTransactionsAsync(userId);
         }
 
-        public async Task<TransactionsEntity> GetTransactionInfoByIdAsync(int transactionId , int userId)
+        public async Task<TransactionsEntity> GetTransactionInfoByIdAsync(int transactionId, int userId)
         {
             return await _transactionRepository.GetTransactionInfoByIdAsync(transactionId, userId);
         }
@@ -49,4 +43,3 @@ namespace FinancialTracker.Application.Services
         }
     }
 }
- 

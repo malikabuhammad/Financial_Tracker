@@ -16,7 +16,7 @@ namespace FinancialTracker.Infrastructure
         public DbSet<Bill> Bills { get; set; }
         public DbSet<Bill_Status> Bill_Status { get; set; }
         public DbSet<Budget> Budgets { get; set; }
-        public DbSet<Category> Category { get; set; }
+        public DbSet<Categories> Categories { get; set; }
         public DbSet<CategoryType> CategoryTypes { get; set; }
         public DbSet<Currency> Currency { get; set; }
         public DbSet<Goal> Goals { get; set; }

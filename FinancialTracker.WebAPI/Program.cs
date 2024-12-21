@@ -8,7 +8,8 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
-using FinancialTracker.Middlewares; 
+using FinancialTracker.Middlewares;
+using FinancialTracker.Domain.Exceptions;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container
@@ -16,11 +17,15 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("MyConnection")));
 builder.Services.AddScoped<ITransactionRepository, TransactionRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IGoals, GoalsRepository>();
+builder.Services.AddScoped<ICategories, CategoriesRepository>();
 
+builder.Services.AddScoped<CategoriesService>();
 builder.Services.AddScoped<TransactionsService>();
 builder.Services.AddScoped<UserService>();
+builder.Services.AddScoped<GoalsService>();
 builder.Services.AddScoped<ProceduresHelper>();
-builder.Services.AddSingleton<JwtTokenService>();
+ builder.Services.AddSingleton<JwtTokenService>();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddControllers();

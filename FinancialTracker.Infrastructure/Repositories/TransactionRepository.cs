@@ -70,8 +70,9 @@ namespace FinancialTracker.Infrastructure.Repositories
                     "Get_All_Transactions",
                     reader => new TransactionsEntity
                     {
-                        TransactionId = reader.IsDBNull(reader.GetOrdinal("Id")) ? 0 : reader.GetInt32(reader.GetOrdinal("Id")),
+                        TransactionId = reader.IsDBNull(reader.GetOrdinal("TransactionId")) ? 0 : reader.GetInt32(reader.GetOrdinal("TransactionId")),
                         UserId = reader.IsDBNull(reader.GetOrdinal("UserId")) ? 0 : reader.GetInt32(reader.GetOrdinal("UserId")),
+                        TypeId = reader.IsDBNull(reader.GetOrdinal("TypeId")) ? 0 : reader.GetInt32(reader.GetOrdinal("TypeId")),
                         Amount = reader.IsDBNull(reader.GetOrdinal("Amount")) ? 0 : reader.GetDecimal(reader.GetOrdinal("Amount")),
                         Date = reader.IsDBNull(reader.GetOrdinal("Date")) ? DateTime.MinValue : reader.GetDateTime(reader.GetOrdinal("Date")),
                         Notes = reader.IsDBNull(reader.GetOrdinal("Notes")) ? string.Empty : reader.GetString(reader.GetOrdinal("Notes")),

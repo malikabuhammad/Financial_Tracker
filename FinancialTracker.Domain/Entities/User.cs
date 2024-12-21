@@ -23,6 +23,6 @@ public partial class Users
     public DateTime? UpdatedBy { get; set; }
     //public List<string> Roles { get; set; } = new List<string>();
 
-    public virtual ICollection<Category> Categories { get; set; } = new List<Category>();
+    public virtual ICollection<Categories> Categories { get; set; } = new List<Categories>();
     public virtual ICollection<Roles> Roles { get; set; } = new List<Roles>();
 }

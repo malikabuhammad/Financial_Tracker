@@ -19,7 +19,7 @@ namespace FinancialTracker.Infrastructure.Utilities
         public async Task<List<T>> ExecuteStoredProcedureAsync<T>(string storedProcedureName, Func<SqlDataReader, T> mapFunction, params SqlParameter[] parameters)
         {
             var resultList = new List<T>();
-            var connectionString = _configuration.GetConnectionString("DefaultConnection");
+            var connectionString = _configuration.GetConnectionString("MyConnection");
 
             try
             {

@@ -67,7 +67,7 @@ namespace FinancialTracker.Infrastructure.Repositories
             {
                 // Execute the stored procedure and map the results
                 var results = await _helper.ExecuteStoredProcedureAsync(
-                    "GetAllTransactions",
+                    "Get_All_Transactions",
                     reader => new TransactionsEntity
                     {
                         TransactionId = reader.IsDBNull(reader.GetOrdinal("Id")) ? 0 : reader.GetInt32(reader.GetOrdinal("Id")),

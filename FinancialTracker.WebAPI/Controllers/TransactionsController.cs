@@ -4,185 +4,148 @@ using FinancialTracker.Domain.Entites;
 using FinancialTracker.Infrastructure.Utilities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Transactions;
-using static FinancialTracker.Application.DTOs.TransactionsDTOs;
+using System.Linq;
+using System.Threading.Tasks;
+using static FinancialTracker.Application.DTOs.RecurringTransactionDto;
 
 namespace FinancialTracker.WebAPI.Controllers
 {
     [Authorize]
     [Route("api/[controller]")]
-    public class TransactionsController : BaseController 
+    [ApiController]
+    public class RecurringTransactionsController : BaseController
     {
-        private readonly TransactionsService _transactionService;
+        private readonly RecurringTransactionsService _service;
 
-        public TransactionsController(TransactionsService transactionService)
+        public RecurringTransactionsController(RecurringTransactionsService service)
         {
-            _transactionService = transactionService;
+            _service = service;
         }
 
-        [HttpGet("Get_All_Transactions")]
-        public async Task<ActionResult> GetAllTransactions()
-        {
-            try
-            {
-                 int userId = GetUserId();
-
-                 var TransData = await _transactionService.GetAllTransactionsAsync(userId);
-                var result = TransData
-                    .Select(r => new { 
-                        EncryptID= EncryptionHelper.EncryptId( r.TransactionId),
-                        r.TypeName,
-                        r.Username,
-                        r.Date,
-                        r.CreateDate,
-                        r.Notes,
-                        r.CategoryName,
-                        r.CategoryId,
-                        r.Amount,
-                        r.IsRecurring,
-
-                
-                    });
-                return Ok(result);
-            }
-            catch (UnauthorizedAccessException ex)
-            {
-                return Unauthorized(new { Message = ex.Message });
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, new
-                {
-                    Message = "An error occurred while retrieving transactions.",
-                    Details = ex.Message
-                });
-            }
-        }
-
-        [HttpGet("Get_Transaction_Details/{EncryptedID}")]
-        public async Task<IActionResult> GetTransactionById(string EncryptedID)
+        [HttpGet("Get_All_Recurring_Transactions")]
+        public async Task<IActionResult> GetAllRecurringTransactions()
         {
             try
             {
                 int userId = GetUserId();
 
-                int TransactionID = EncryptionHelper.DecryptId(EncryptedID);
-                var transaction = await _transactionService.GetTransactionByIdAsync(TransactionID);
+                var transactions = await _service.GetAllRecurringTransactionsAsync(userId);
+                var result = transactions.Select(r => new
+                {
+                    EncryptedId = EncryptionHelper.EncryptId(r.RecurringTransactionId),
+                    r.Amount,
+                    r.CategoryID,
+                    r.CategoryName,
+                    r.FrequencyID,
+                    r.StartDate,
+                    r.EndDate,
+                    r.Notes,
+                    r.IsAtive,
+                    r.IsOneTime
+                });
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    Message = "An error occurred while retrieving recurring transactions.",
+                    Details = ex.Message
+                });
+            }
+        }
+
+        [HttpGet("Get_Recurring_Transaction_Details/{EncryptedId}")]
+        public async Task<IActionResult> GetRecurringTransactionById(string EncryptedId)
+        {
+            try
+            {
+                int userId = GetUserId();
+                int transactionId = EncryptionHelper.DecryptId(EncryptedId);
+
+                var transaction = await _service.GetRecurringTransactionByIdAsync(transactionId, userId);
                 if (transaction == null)
                 {
-                    return NotFound(new { Message = $"Transaction with ID {TransactionID} was not found." });
+                    return NotFound(new { Message = $"Recurring transaction with ID {EncryptedId} not found." });
                 }
 
                 return Ok(transaction);
             }
-            catch (UnauthorizedAccessException ex)
-            {
-                return Unauthorized(new { Message = ex.Message });
-            }
             catch (Exception ex)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, new
+                return StatusCode(500, new
                 {
-                    Message = "An error occurred while retrieving the transaction.",
+                    Message = "An error occurred while retrieving the recurring transaction.",
                     Details = ex.Message
                 });
             }
         }
 
-        [HttpPost("Add_Transaction")]
-        public async Task<IActionResult> AddTransaction([FromBody] TransactionAddModel transaction)
+        [HttpPost("Add_Recurring_Transaction")]
+        public async Task<IActionResult> AddRecurringTransaction([FromBody] RecurringTransactionAddModel transaction)
+        {
+            try
+            {
+                int userId = GetUserId();
+                var recurringTransaction = new RecurringTransaction
+                {
+                    UserId = userId,
+                    CategoryId = transaction.CategoryId,
+                    Amount = transaction.Amount,
+                    FrequencyID = transaction.FrequencyID,
+                    StartDate = transaction.StartDate,
+                    EndDate = transaction.EndDate,
+                    Notes = transaction.Notes,
+                    IsOneTime = transaction.IsOneTime
+                };
+
+                var id = await _service.AddRecurringTransactionAsync(recurringTransaction);
+                return CreatedAtAction(nameof(GetRecurringTransactionById), new { EncryptedId = EncryptionHelper.EncryptId(id) }, transaction);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    Message = "An error occurred while adding the recurring transaction.",
+                    Details = ex.Message
+                });
+            }
+        }
+
+        [HttpPut("Update_Recurring_Transaction")]
+        public async Task<IActionResult> EditRecurringTransaction([FromBody] RecurringTransactionEditModel transaction)
         {
             try
             {
                 int userId = GetUserId();
 
-                Transactions transactionObj = new Transactions()
-                {Amount= transaction.Amount,
-                CategoryId= transaction.CategoryId,
-                CreateDate=DateTime.Now,
-                Date=transaction.Date,
-                IsRecurring=transaction.IsRecurring,
-                Notes=transaction.Notes,
-
-                 
-                 UserId=userId,
-                };
-
-                await _transactionService.AddTransactionAsync(transactionObj);
-                return Ok(200);
-            }
-            catch (UnauthorizedAccessException ex)
-            {
-                return Unauthorized(new { Message = ex.Message });
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, new
+                var recurringTransaction = await _service.GetRecurringTransactionByIdAsync(transaction.RecurringTransactionId, userId);
+                if (recurringTransaction == null)
                 {
-                    Message = "An error occurred while adding the transaction.",
-                    Details = ex.Message
-                });
-            }
-        }
-
-        [HttpPut("Update_Transaction")]
-        public async Task<IActionResult> EditTransaction([FromBody] TransactionEditModel transaction)
-        {
-            try
-            {
-              var TransObj =  await _transactionService.GetTransactionByIdAsync(transaction.TransactionId);
- 
-
-                TransObj.CategoryId = transaction.CategoryId;
-                TransObj.Amount = transaction.Amount;
-                TransObj.Date = transaction.Date;
-                TransObj.Notes = transaction.Notes;
-                TransObj.IsRecurring = transaction.IsRecurring;
-                TransObj.TransactionId = transaction.TransactionId;
-    
-               
-                 await _transactionService.EditTransactionAsync(TransObj);
-                return NoContent();
-            }
-            catch (UnauthorizedAccessException ex)
-            {
-                return Unauthorized(new { Message = ex.Message });
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, new
-                {
-                    Message = "An error occurred while updating the transaction.",
-                    Details = ex.Message
-                });
-            }
-        }
-
-        [HttpDelete("Delete_Transaction/{TransactionID}")]
-        public async Task<IActionResult> DeleteTransaction(int TransactionID)
-        {
-            try
-            {
-                int userId = GetUserId(); 
-
-                var transaction = await _transactionService.GetTransactionByIdAsync(TransactionID);
-                if (transaction == null)
-                {
-                    return NotFound(new { Message = $"Transaction with ID {TransactionID} was not found." });
+                    return NotFound(new { Message = "Recurring transaction not found." });
                 }
 
-                //await _transactionService.DeleteTransactionAsync(transaction);
+                recurringTransaction.CategoryId = transaction.CategoryId;
+                recurringTransaction.Amount = transaction.Amount;
+                recurringTransaction.FrequencyID = transaction.FrequencyID;
+                recurringTransaction.StartDate = transaction.StartDate;
+                recurringTransaction.EndDate = transaction.EndDate;
+                recurringTransaction.Notes = transaction.Notes;
+                recurringTransaction.IsOneTime = transaction.IsOneTime;
+                recurringTransaction.IsActive = transaction.IsActive;
+                recurringTransaction.CancelledDate = transaction.CancelledDate;
+                recurringTransaction.CancelReason = transaction.CancelReason;
+                recurringTransaction.NextRunDate = transaction.NextRunDate;
+
+                await _service.EditRecurringTransactionAsync(recurringTransaction);
                 return NoContent();
-            }
-            catch (UnauthorizedAccessException ex)
-            {
-                return Unauthorized(new { Message = ex.Message });
             }
             catch (Exception ex)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, new
+                return StatusCode(500, new
                 {
-                    Message = "An error occurred while deleting the transaction.",
+                    Message = "An error occurred while updating the recurring transaction.",
                     Details = ex.Message
                 });
             }

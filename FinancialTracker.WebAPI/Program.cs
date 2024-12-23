@@ -19,6 +19,7 @@ builder.Services.AddScoped<ITransactionRepository, TransactionRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IGoals, GoalsRepository>();
 builder.Services.AddScoped<ICategories, CategoriesRepository>();
+builder.Services.AddScoped<IRecurringTransactionRepository, RecurringTransactionsRepository>();
 
 builder.Services.AddScoped<CategoriesService>();
 builder.Services.AddScoped<TransactionsService>();

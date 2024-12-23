@@ -54,5 +54,37 @@ namespace FinancialTracker.Infrastructure.Utilities
 
             return resultList;
         }
+
+        public async Task<T> ExecuteScalarStoredProcedureAsync<T>(string storedProcedureName, params SqlParameter[] parameters)
+        {
+            var connectionString = _configuration.GetConnectionString("MyConnection");
+
+            try
+            {
+                using (var connection = new SqlConnection(connectionString))
+                {
+                    await connection.OpenAsync();
+                    using (var command = new SqlCommand(storedProcedureName, connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+
+                        if (parameters != null)
+                        {
+                            command.Parameters.AddRange(parameters);
+                        }
+
+                        // Execute the stored procedure and return the scalar value
+                        var result = await command.ExecuteScalarAsync();
+                        return (result == DBNull.Value || result == null) ? default : (T)result;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                // Add logging or rethrow as needed
+                throw new Exception($"An error occurred while executing stored procedure {storedProcedureName}: {ex.Message}", ex);
+            }
+        }
+
     }
 }

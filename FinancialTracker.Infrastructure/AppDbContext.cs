@@ -13,8 +13,7 @@ namespace FinancialTracker.Infrastructure
     {
 
         public DbSet<Users> Users { get; set; }
-        public DbSet<Bill> Bills { get; set; }
-        public DbSet<Bill_Status> Bill_Status { get; set; }
+ 
         public DbSet<Budget> Budgets { get; set; }
         public DbSet<Categories> Categories { get; set; }
         public DbSet<CategoryType> CategoryTypes { get; set; }
@@ -26,8 +25,7 @@ namespace FinancialTracker.Infrastructure
         public DbSet<Transactions> Transactions { get; set; }
         public DbSet<TransactionTag> TransactionTag { get; set; }
         public DbSet<AuditLog> AuditLogs { get; set; }
-        public DbSet<Bill_Status> bill_Statuses { get; set; }
-        public DbSet<Roles> Roles { get; set; }
+         public DbSet<Roles> Roles { get; set; }
         public DbSet<UserRoles> UserRoles { get; set; }
 
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)

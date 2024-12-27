@@ -16,7 +16,11 @@ namespace FinancialTracker.Domain.Interfaces
         Task<TransactionsEntity> GetTransactionInfoByIdAsync(int TransactionID, int UserID);
         Task AddTransactionAsync(Transactions transaction);
         Task EditTransactionAsync(Transactions transaction);
-       
-         Task SaveChangesAsync();
+ 
+        
+        //Task AnalyzeFinancialStatusAsync(int UserId); // Executes the AnalyzeFinancialStatus procedure
+        //Task ProcessRecurringTransactionsAsync(); // Executes the ProcessRecurringTransactions procedure
+
+        Task SaveChangesAsync();
     }
 }

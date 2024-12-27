@@ -10,24 +10,35 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using FinancialTracker.Middlewares;
 using FinancialTracker.Domain.Exceptions;
+using FinancialTracker.Infrastructure.BackgroundServices;
+using FinancialTracker.WebAPI.Hubs;
+using FinancialTracker.WebAPI.Services;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("MyConnection")));
+
+builder.Services.AddHttpContextAccessor();
+
 builder.Services.AddScoped<ITransactionRepository, TransactionRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IGoals, GoalsRepository>();
 builder.Services.AddScoped<ICategories, CategoriesRepository>();
 builder.Services.AddScoped<IRecurringTransactionRepository, RecurringTransactionsRepository>();
 
+builder.Services.AddScoped<RecurringTransactionsService>();
 builder.Services.AddScoped<CategoriesService>();
 builder.Services.AddScoped<TransactionsService>();
 builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<GoalsService>();
 builder.Services.AddScoped<ProceduresHelper>();
  builder.Services.AddSingleton<JwtTokenService>();
+builder.Services.AddSingleton<IJobRepository, JobRepository>(); // Singleton repository
+builder.Services.AddHostedService<TransactionsJobService>(); // Hosted service
+builder.Services.AddScoped<INotificationService, FinancialTracker.WebAPI.Services.NotificationService>();
 
+//builder.Services.AddSingleton < TransactionsJobService>();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddControllers();
 
@@ -40,7 +51,7 @@ builder.Services.AddSwaggerDocumentation();
 
 // Add Authorization
 builder.Services.AddAuthorization();
-
+builder.Services.AddSignalR();
 var app = builder.Build();
 
 // Configure middleware for development
@@ -69,7 +80,7 @@ app.UseHttpsRedirection();
  
 app.UseAuthentication();
 app.UseAuthorization();
- 
+app.MapHub<NotificationHub>("/Notifications");
 app.MapControllers();
 
 

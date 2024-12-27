@@ -37,6 +37,24 @@ namespace FinancialTracker.Infrastructure.Repositories
             }
         }
 
+        //public async Task AnalyzeFinancialStatusAsync(int userId)
+        //{
+        //    try
+        //    {
+        //        // Call the AnalyzeFinancialStatus stored procedure using ProceduresHelper
+        //        await _helper.ExecuteStoredProcedureAsync<object>(
+        //            "AnalyzeFinancialStatus",
+        //            reader => null, // No need to map results since the procedure doesn't return a result set
+        //            new SqlParameter("@UserId", userId) // Pass UserId as a parameter
+        //        );
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        throw new Exception("An error occurred while analyzing financial status.", ex);
+        //    }
+        //}
+
+
         public async Task EditTransactionAsync(Transactions transaction)
         {
             try
@@ -137,6 +155,22 @@ namespace FinancialTracker.Infrastructure.Repositories
                 throw new Exception($"An error occurred while retrieving transaction with ID {transactionId}.", ex);
             }
         }
+
+        //public async Task ProcessRecurringTransactionsAsync()
+        //{
+        //    try
+        //    {
+        //         await _helper.ExecuteStoredProcedureAsync<object>(
+        //            "ProcessRecurringTransactions",
+        //            reader => null 
+        //        );
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        throw new Exception("An error occurred while processing recurring transactions.", ex);
+        //    }
+        //}
+
 
         public async Task SaveChangesAsync()
         {

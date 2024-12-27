@@ -41,5 +41,18 @@ namespace FinancialTracker.Application.Services
             await _transactionRepository.EditTransactionAsync(transaction);
             await _transactionRepository.SaveChangesAsync();
         }
+
+
+
+
+        //public async Task RunFinancialAnalysisAsync(int userId)
+        //{
+        //    await _transactionRepository.AnalyzeFinancialStatusAsync(userId);
+        //}
+
+        //public async Task ProcessRecurringTransactionsAsync()
+        //{
+        //    await _transactionRepository.ProcessRecurringTransactionsAsync();
+        //}
     }
 }

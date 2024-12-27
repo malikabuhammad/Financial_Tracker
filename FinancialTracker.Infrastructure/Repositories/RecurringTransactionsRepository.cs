@@ -27,6 +27,10 @@ namespace FinancialTracker.Infrastructure.Repositories
         {
             try
             {
+
+                await _context.RecurringTransactions.AddAsync(transaction);
+                await _context.SaveChangesAsync();
+
                 var recurringTransactionId = await _helper.ExecuteScalarStoredProcedureAsync<int>(
                     "AddRecurringTransaction",
                     new SqlParameter("@UserId", transaction.UserId),

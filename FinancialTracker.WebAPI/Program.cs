@@ -13,6 +13,7 @@ using FinancialTracker.Domain.Exceptions;
 using FinancialTracker.Infrastructure.BackgroundServices;
 using FinancialTracker.WebAPI.Hubs;
 using FinancialTracker.WebAPI.Services;
+using FinancialTracker.Infrastructure.Services;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container
@@ -37,6 +38,12 @@ builder.Services.AddScoped<ProceduresHelper>();
 builder.Services.AddSingleton<IJobRepository, JobRepository>(); // Singleton repository
 builder.Services.AddHostedService<TransactionsJobService>(); // Hosted service
 builder.Services.AddScoped<INotificationService, FinancialTracker.WebAPI.Services.NotificationService>();
+builder.Services.AddSingleton<MachineLearningService>();
+builder.Services.AddScoped<SpendingDataExportService>();
+builder.Services.AddScoped<SpendingPredictionService>();
+builder.Services.AddHostedService<CsvUpdateAndRetrainService>();
+
+builder.Services.AddScoped<IMachineLearningService, MachineLearningService>();
 
 //builder.Services.AddSingleton < TransactionsJobService>();
 builder.Services.AddEndpointsApiExplorer();

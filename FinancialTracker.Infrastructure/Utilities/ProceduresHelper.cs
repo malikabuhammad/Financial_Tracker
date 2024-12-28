@@ -209,5 +209,32 @@ namespace FinancialTracker.Infrastructure.Utilities
             }
         }
 
+
+
+
+        public async Task<DataTable> ExecuteStoredProcedureAsync(string procedureName, params SqlParameter[] parameters)
+        {
+            var connectionString = _configuration.GetConnectionString("MyConnection");
+
+            using (var connection = new SqlConnection(connectionString))
+            using (var command = new SqlCommand(procedureName, connection))
+            {
+                command.CommandType = CommandType.StoredProcedure;
+
+                if (parameters != null)
+                {
+                    command.Parameters.AddRange(parameters);
+                }
+
+                await connection.OpenAsync();
+
+                using (var adapter = new SqlDataAdapter(command))
+                {
+                    var dataTable = new DataTable();
+                    adapter.Fill(dataTable); // Fill the DataTable with the procedure's result
+                    return dataTable;
+                }
+            }
+        }
     }
 }

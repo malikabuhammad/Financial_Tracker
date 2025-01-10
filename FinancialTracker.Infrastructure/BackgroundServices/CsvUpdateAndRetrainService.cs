@@ -37,7 +37,7 @@ namespace FinancialTracker.Infrastructure.BackgroundServices
         }
 
         private async void PerformCsvUpdateAndRetrain(object state)
-        {
+        {//
             try
             {
                 using (var scope = _serviceProvider.CreateScope())
